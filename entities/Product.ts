@@ -46,4 +46,4 @@ export class Product {
 }
 
 
-
+// trabajo consiste en una aplicacion web con node.js y express para un ecommerce que permita a los usuarios registrarse, iniciar sesión, navegar por productos, agregar productos al carrito, realizar pedidos y gestionar su perfil.
