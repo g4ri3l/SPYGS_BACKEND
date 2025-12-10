@@ -16,7 +16,7 @@ import adminDeliveriesRoutes from './routes/admin/deliveries';
 import adminOrdersRoutes from './routes/admin/orders';
 import adminSatisfactionRoutes from './routes/admin/satisfaction';
 
-// Cargar variables de entorno
+// Cargar variables de entorno ....
 dotenv.config();
 
 const app = express();
@@ -36,7 +36,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// Rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/cart', cartRoutes);
@@ -63,8 +63,18 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     message: err.message 
   });
 });
+setTimeout(() => {
+  console.log("📦 Rutas cargadas correctamente:");
+  const routes = app._router?.stack
+    ?.filter((layer: any) => layer.route)
+    ?.map((layer: any) => layer.route.path);
+
+  console.log(routes || []);
+}, 500);
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
 
+// trabajo consiste en una aplicacion web con node.js y express para un ecommerce que permita a los usuarios registrarse, iniciar sesión, navegar por productos, agregar productos al carrito, realizar pedidos y gestionar su perfil.
