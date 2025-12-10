@@ -20,7 +20,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
       order: { isDefault: 'DESC' }
     });
 
-    res.json(userPaymentMethods);
+    res.json({ paymentMethods: userPaymentMethods });
   } catch (error) {
     console.error('Error al obtener métodos de pago:', error);
     res.status(500).json({ error: 'Error al obtener métodos de pago' });
@@ -34,14 +34,26 @@ router.post('/', async (req: AuthRequest, res: Response) => {
     const { type, cardNumber, cardHolder, expiryDate, isDefault } = req.body;
     const paymentMethodRepository = AppDataSource.getRepository(PaymentMethod);
 
-    if (!type || !cardNumber || !cardHolder || !expiryDate) {
+    // Validar campos según el tipo
+    if (type === 'card') {
+      if (!cardNumber || !cardHolder || !expiryDate) {
+        return res.status(400).json({ 
+          error: 'Para tarjetas, número de tarjeta, titular y fecha de expiración son requeridos' 
+        });
+      }
+    } else if (type === 'cash') {
+      // Para efectivo, no se requieren campos de tarjeta
+      // cardNumber, cardHolder, expiryDate serán null o vacíos
+    } else {
       return res.status(400).json({ 
-        error: 'Todos los campos del método de pago son requeridos' 
+        error: 'Tipo de método de pago inválido. Use "card" o "cash"' 
       });
     }
 
-    // Enmascarar número de tarjeta (solo mostrar últimos 4 dígitos)
-    const maskedCardNumber = `**** **** **** ${cardNumber.slice(-4)}`;
+    // Enmascarar número de tarjeta si es tarjeta (solo mostrar últimos 4 dígitos)
+    const maskedCardNumber = type === 'card' && cardNumber 
+      ? `**** **** **** ${cardNumber.slice(-4)}` 
+      : '';
 
     // Si es el método por defecto, quitar el default de los demás
     if (isDefault) {
@@ -60,8 +72,8 @@ router.post('/', async (req: AuthRequest, res: Response) => {
       userId,
       type,
       cardNumber: maskedCardNumber,
-      cardHolder,
-      expiryDate,
+      cardHolder: cardHolder || '',
+      expiryDate: expiryDate || '',
       isDefault: shouldBeDefault
     });
 

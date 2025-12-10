@@ -21,9 +21,24 @@ router.get('/', async (req: AuthRequest, res: Response) => {
       relations: ['product']
     });
 
-    const favoriteProducts = favorites.map((fav: Favorite) => fav.product);
+    // Formatear productos con todas las propiedades necesarias
+    const favoriteProducts = favorites.map((fav: Favorite) => {
+      const product = fav.product;
+      return {
+        id: product.id,
+        title: product.title,
+        price: parseFloat(product.price.toString()),
+        description: product.description,
+        category: product.category,
+        provider: product.provider,
+        rating: parseFloat(product.rating.toString()),
+        deliveryTime: product.deliveryTime,
+        distance: product.distance,
+        image: product.image
+      };
+    });
 
-    res.json(favoriteProducts);
+    res.json({ favorites: favoriteProducts, products: favoriteProducts });
   } catch (error) {
     console.error('Error al obtener favoritos:', error);
     res.status(500).json({ error: 'Error al obtener favoritos' });

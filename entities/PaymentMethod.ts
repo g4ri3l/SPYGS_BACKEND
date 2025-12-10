@@ -16,14 +16,14 @@ export class PaymentMethod {
   @Column({ type: 'varchar', length: 50 })
   type!: string; // 'credit', 'debit', 'paypal', etc.
 
-  @Column({ type: 'varchar', length: 50 })
-  cardNumber!: string; // Enmascarado
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  cardNumber!: string | null; // Enmascarado (null para efectivo)
 
-  @Column({ type: 'varchar', length: 255 })
-  cardHolder!: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  cardHolder!: string | null; // null para efectivo
 
-  @Column({ type: 'varchar', length: 10 })
-  expiryDate!: string;
+  @Column({ type: 'varchar', length: 10, nullable: true })
+  expiryDate!: string | null; // null para efectivo
 
   @Column({ type: 'boolean', default: false })
   isDefault!: boolean;

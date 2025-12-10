@@ -38,6 +38,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
     
     res.json({
       items,
+      cartItems: items, // Compatibilidad con frontend
       total: total.toFixed(2),
       count: items.reduce((sum: number, item: typeof items[0]) => sum + item.quantity, 0)
     });

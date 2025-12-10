@@ -19,6 +19,16 @@ export class User {
   @Column({ type: 'varchar', length: 255, nullable: true })
   password!: string | null; // Null para usuarios de Google
 
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  phone!: string | null;
+
+  @Column({ 
+    type: 'varchar', 
+    length: 20, 
+    default: 'customer' 
+  })
+  role!: 'customer' | 'delivery' | 'admin';
+
   @CreateDateColumn()
   createdAt!: Date;
 

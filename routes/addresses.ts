@@ -20,7 +20,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
       order: { isDefault: 'DESC' }
     });
 
-    res.json(userAddresses);
+    res.json({ addresses: userAddresses });
   } catch (error) {
     console.error('Error al obtener direcciones:', error);
     res.status(500).json({ error: 'Error al obtener direcciones' });
@@ -28,17 +28,17 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 });
 
 // Agregar dirección
-router.post('/', async (req: AuthRequest, res: Response) => {
-  try {
-    const userId = req.user!.userId;
-    const { street, city, state, zipCode, country, isDefault } = req.body;
-    const addressRepository = AppDataSource.getRepository(Address);
+  router.post('/', async (req: AuthRequest, res: Response) => {
+    try {
+      const userId = req.user!.userId;
+      const { name, street, city, state, zipCode, country, reference, isDefault } = req.body;
+      const addressRepository = AppDataSource.getRepository(Address);
 
-    if (!street || !city || !state || !zipCode || !country) {
-      return res.status(400).json({ 
-        error: 'Todos los campos de dirección son requeridos' 
-      });
-    }
+      if (!street || !city || !state || !zipCode || !country) {
+        return res.status(400).json({ 
+          error: 'Calle, ciudad, estado, código postal y país son requeridos' 
+        });
+      }
 
     // Si es la dirección por defecto, quitar el default de las demás
     if (isDefault) {
@@ -55,11 +55,13 @@ router.post('/', async (req: AuthRequest, res: Response) => {
 
     const newAddress = addressRepository.create({
       userId,
+      name: name || null,
       street,
       city,
       state,
       zipCode,
       country,
+      reference: reference || null,
       isDefault: shouldBeDefault
     });
 
@@ -76,26 +78,28 @@ router.post('/', async (req: AuthRequest, res: Response) => {
 });
 
 // Actualizar dirección
-router.put('/:id', async (req: AuthRequest, res: Response) => {
-  try {
-    const userId = req.user!.userId;
-    const { id } = req.params;
-    const { street, city, state, zipCode, country, isDefault } = req.body;
-    const addressRepository = AppDataSource.getRepository(Address);
+  router.put('/:id', async (req: AuthRequest, res: Response) => {
+    try {
+      const userId = req.user!.userId;
+      const { id } = req.params;
+      const { name, street, city, state, zipCode, country, reference, isDefault } = req.body;
+      const addressRepository = AppDataSource.getRepository(Address);
 
-    const address = await addressRepository.findOne({
-      where: { id, userId }
-    });
+      const address = await addressRepository.findOne({
+        where: { id, userId }
+      });
 
-    if (!address) {
-      return res.status(404).json({ error: 'Dirección no encontrada' });
-    }
+      if (!address) {
+        return res.status(404).json({ error: 'Dirección no encontrada' });
+      }
 
-    if (street) address.street = street;
-    if (city) address.city = city;
-    if (state) address.state = state;
-    if (zipCode) address.zipCode = zipCode;
-    if (country) address.country = country;
+      if (name !== undefined) address.name = name;
+      if (street) address.street = street;
+      if (city) address.city = city;
+      if (state) address.state = state;
+      if (zipCode) address.zipCode = zipCode;
+      if (country) address.country = country;
+      if (reference !== undefined) address.reference = reference;
     
     if (isDefault !== undefined) {
       // Si se marca como default, quitar el default de las demás

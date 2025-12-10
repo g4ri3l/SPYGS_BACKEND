@@ -13,6 +13,9 @@ export class Address {
   @JoinColumn({ name: 'userId' })
   user!: User;
 
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  name!: string | null; // Ej: "Casa", "Oficina"
+
   @Column({ type: 'varchar', length: 255 })
   street!: string;
 
@@ -27,6 +30,25 @@ export class Address {
 
   @Column({ type: 'varchar', length: 100 })
   country!: string;
+
+  @Column({ type: 'text', nullable: true })
+  reference!: string | null; // Referencias adicionales
+
+  @Column({ 
+    type: 'decimal', 
+    precision: 10, 
+    scale: 8, 
+    nullable: true 
+  })
+  latitude!: number | null; // Para cálculo de distancia
+
+  @Column({ 
+    type: 'decimal', 
+    precision: 11, 
+    scale: 8, 
+    nullable: true 
+  })
+  longitude!: number | null; // Para cálculo de distancia
 
   @Column({ type: 'boolean', default: false })
   isDefault!: boolean;

@@ -24,7 +24,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 
     // No enviar la contraseña
     const { password, ...userProfile } = user;
-    res.json(userProfile);
+    res.json({ user: userProfile });
   } catch (error) {
     console.error('Error al obtener perfil:', error);
     res.status(500).json({ error: 'Error al obtener perfil' });
@@ -44,16 +44,16 @@ router.put('/', async (req: AuthRequest, res: Response) => {
     }
 
     if (name) user.name = name;
-    if (email) {
-      // Verificar que el email no esté en uso por otro usuario
-      const emailExists = await userRepository.findOne({ 
-        where: { email, id: userId !== userId ? userId : undefined } 
-      });
-      if (emailExists && emailExists.id !== userId) {
-        return res.status(400).json({ error: 'El email ya está en uso' });
+      if (email) {
+        // Verificar que el email no esté en uso por otro usuario
+        const emailExists = await userRepository.findOne({ 
+          where: { email } 
+        });
+        if (emailExists && emailExists.id !== userId) {
+          return res.status(400).json({ error: 'El email ya está en uso' });
+        }
+        user.email = email;
       }
-      user.email = email;
-    }
 
     await userRepository.save(user);
 

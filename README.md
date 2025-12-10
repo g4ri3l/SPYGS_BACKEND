@@ -21,11 +21,24 @@ npm install
 
 ## Configuración
 
-Crea un archivo `.env` en la raíz del proyecto (opcional):
+Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 
 ```env
+# Puerto del servidor
 PORT=3000
+
+# JWT Secret - Cambiar en producción por un valor seguro y aleatorio
 JWT_SECRET=tu_secreto_super_seguro_cambiar_en_produccion
+
+# Base de datos PostgreSQL
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=tu_contraseña
+DB_NAME=gestion_pedidos
+
+# Google OAuth (opcional, para login con Google)
+GOOGLE_CLIENT_ID=tu_google_client_id.apps.googleusercontent.com
 ```
 
 ## Ejecución
@@ -107,18 +120,45 @@ La mayoría de los endpoints requieren autenticación. Incluye el token JWT en e
 Authorization: Bearer <token>
 ```
 
+## Base de Datos
+
+Este proyecto usa **PostgreSQL** con **TypeORM**. Asegúrate de tener PostgreSQL instalado y configurado.
+
+### Inicializar Base de Datos
+
+```bash
+npm run init-db
+```
+
+Esto creará las tablas necesarias en la base de datos.
+
 ## Tecnologías
 
 - **TypeScript** - Tipado estático para mayor seguridad y productividad
 - **Express** - Framework web para Node.js
+- **TypeORM** - ORM para PostgreSQL
+- **PostgreSQL** - Base de datos relacional
 - **JWT** - Autenticación con tokens
 - **bcryptjs** - Hash de contraseñas
 - **CORS** - Habilitación de peticiones cross-origin
 
+## Estructura del Proyecto
+
+```
+SPYGS_BACKEND/
+├── config/          # Configuración de base de datos
+├── entities/        # Entidades TypeORM (User, Product, Order, etc.)
+├── middleware/      # Middleware de autenticación
+├── routes/          # Rutas de la API
+├── scripts/         # Scripts de utilidad
+├── types/           # Tipos TypeScript compartidos
+└── index.ts         # Punto de entrada
+```
+
 ## Notas
 
-- Este backend usa almacenamiento en memoria (arrays). En producción, deberías usar una base de datos real (MongoDB, PostgreSQL, etc.).
-- Los datos se perderán al reiniciar el servidor.
-- El JWT_SECRET debe ser cambiado en producción.
+- El JWT_SECRET debe ser cambiado en producción por un valor seguro y aleatorio.
 - El código TypeScript se compila a JavaScript en la carpeta `dist/`.
+- La base de datos se sincroniza automáticamente en desarrollo (synchronize: true).
+- En producción, desactiva `synchronize` y usa migraciones.
 

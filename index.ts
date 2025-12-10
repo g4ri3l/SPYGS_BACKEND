@@ -11,6 +11,10 @@ import favoritesRoutes from './routes/favorites';
 import profileRoutes from './routes/profile';
 import addressesRoutes from './routes/addresses';
 import paymentMethodsRoutes from './routes/paymentMethods';
+import notificationsRoutes from './routes/notifications';
+import adminDeliveriesRoutes from './routes/admin/deliveries';
+import adminOrdersRoutes from './routes/admin/orders';
+import adminSatisfactionRoutes from './routes/admin/satisfaction';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -41,6 +45,10 @@ app.use('/api/favorites', favoritesRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/addresses', addressesRoutes);
 app.use('/api/payment-methods', paymentMethodsRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/admin/deliveries', adminDeliveriesRoutes);
+app.use('/api/admin/orders', adminOrdersRoutes);
+app.use('/api/admin/satisfaction', adminSatisfactionRoutes);
 
 // Health check
 app.get('/api/health', (_req: Request, res: Response) => {

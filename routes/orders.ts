@@ -38,7 +38,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
       restaurant: order.restaurant
     }));
 
-    res.json(formattedOrders);
+    res.json({ orders: formattedOrders });
   } catch (error) {
     console.error('Error al obtener pedidos:', error);
     res.status(500).json({ error: 'Error al obtener pedidos' });
@@ -70,7 +70,22 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
         quantity: item.quantity,
         price: parseFloat(item.price.toString())
       })),
-      restaurant: order.restaurant
+      restaurant: order.restaurant,
+      address: order.address ? {
+        name: order.address.name || null,
+        street: order.address.street,
+        city: order.address.city,
+        state: order.address.state,
+        zipCode: order.address.zipCode,
+        country: order.address.country,
+        reference: order.address.reference || null
+      } : null,
+      paymentMethod: order.paymentMethod ? {
+        type: order.paymentMethod.type,
+        cardNumber: order.paymentMethod.cardNumber || null,
+        cardHolder: order.paymentMethod.cardHolder || null,
+        expiryDate: order.paymentMethod.expiryDate || null
+      } : null
     };
     
     res.json(formattedOrder);

@@ -9,6 +9,8 @@ import { CartItem } from '../entities/CartItem';
 import { Address } from '../entities/Address';
 import { PaymentMethod } from '../entities/PaymentMethod';
 import { Favorite } from '../entities/Favorite';
+import { Delivery } from '../entities/Delivery';
+import { DeliveryRating } from '../entities/DeliveryRating';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -20,7 +22,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'gestion_pedidos',
-  entities: [User, Product, Order, OrderItem, CartItem, Address, PaymentMethod, Favorite],
+  entities: [User, Product, Order, OrderItem, CartItem, Address, PaymentMethod, Favorite, Delivery, DeliveryRating],
   synchronize: process.env.NODE_ENV !== 'production', // Solo en desarrollo
   logging: process.env.NODE_ENV === 'development',
 });

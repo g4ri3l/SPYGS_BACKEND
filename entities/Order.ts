@@ -3,6 +3,7 @@ import { User } from './User';
 import { OrderItem } from './OrderItem';
 import { Address } from './Address';
 import { PaymentMethod } from './PaymentMethod';
+import { Delivery } from './Delivery';
 
 export type OrderStatus = 'Pendiente' | 'En preparación' | 'En camino' | 'Entregado' | 'Cancelado';
 
@@ -47,6 +48,19 @@ export class Order {
   @ManyToOne(() => PaymentMethod)
   @JoinColumn({ name: 'paymentMethodId' })
   paymentMethod!: PaymentMethod;
+
+  @Column({ type: 'uuid', nullable: true })
+  deliveryId!: string | null;
+
+  @ManyToOne(() => Delivery, { nullable: true })
+  @JoinColumn({ name: 'deliveryId' })
+  delivery!: Delivery | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  assignedAt!: Date | null;
+
+  @Column({ type: 'int', nullable: true })
+  estimatedDeliveryTime!: number | null; // minutos
 
   @OneToMany(() => OrderItem, orderItem => orderItem.order, { cascade: true })
   items!: OrderItem[];
